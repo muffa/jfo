@@ -140,8 +140,8 @@ myGcd n m
 
 hassuCompare :: Int -> Int -> Ordering
 hassuCompare n m
-	| mod n 2 == 1 && mod m 2 == 0 = LT
-	| mod n 2 == 0 && mod m 2 == 1 = GT
+	| mod n 2 == 1 && mod m 2 == 0 = GT
+	| mod n 2 == 0 && mod m 2 == 1 = LT
 	| True = compare n m
 
 -- Tehtävä 15: Toteuta funktio hassuMinimi :: Int -> Int -> Int, joka
@@ -155,7 +155,9 @@ hassuCompare n m
 -- Huomio: käytä hassuCompare-funktiota
 
 hassuMinimi :: Int -> Int -> Int
-hassuMinimi = undefined
+hassuMinimi n m -- = undefined
+	| hassuCompare n m == LT = n
+	| True = m
 
 
 -- Tehtävä 16: toteuta funktio pyramidi, joka tuottaa tällaisia
@@ -172,8 +174,13 @@ hassuMinimi = undefined
 -- * tarvitset rekursiiviisen apufunktion
 
 pyramidi :: Integer -> String
-pyramidi = undefined
+pyramidi n = pyramidi' (n-1) True ++ show n ++ pyramidi' (n-1) False
 
+pyramidi' :: Integer -> Bool -> String
+pyramidi' n b
+	| n < 0 = ""
+	| b = pyramidi' (n-1) b ++ show n
+	| True = show n ++ pyramidi' (n-1) b
 -- Tehtävä 17: toteuta funktio smallestDivisor n, joka palauttaa
 -- pienimmän luvun k>1 s.e. n on jaollinen k:lla.
 --
@@ -183,7 +190,10 @@ pyramidi = undefined
 -- loputtomia rekursioita. Muista tämä seuraavassa tehtävässä.
 
 smallestDivisor :: Integer -> Integer
-smallestDivisor = undefined
+smallestDivisor n = smallestDivisor' n 2
+
+smallestDivisor' :: Integer -> Integer -> Integer
+smallestDivisor' n k = if mod n k == 0 then k else smallestDivisor' n (k+1)
 
 -- Tehtävä 18: toteuta funktio isPrime, joka tarkistaa onko annettu
 -- luku alkuluku käyttämällä funktiota smallestDivisor.
@@ -192,7 +202,7 @@ smallestDivisor = undefined
 -- itsellään ja 1:llä. 0 ja 1 eivät ole alkulukuja.
 
 isPrime :: Integer -> Bool
-isPrime = undefined
+isPrime n = if smallestDivisor n == n then True else False -- undefined
 
 -- Tehtävä 19: toteuta funktio nextPrime, joka palauttaa annettua
 -- lukua seuraavan alkuluvun. Jos luku on alkuluku, palautetaan se
@@ -201,5 +211,5 @@ isPrime = undefined
 -- Tässä kannattaa luonnollisesti käyttää apuna funktiota isPrime.
 
 nextPrime :: Integer -> Integer
-nextPrime = undefined
+nextPrime n = if isPrime n then n else nextPrime (n+1) -- undefined
 
