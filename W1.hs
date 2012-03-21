@@ -117,7 +117,10 @@ tribonacci' a b c n = tribonacci' b c (a+b+c) (n-1)
 -- funktioksi myGcd :: Integer -> Integer -> Integer
 
 myGcd :: Integer -> Integer -> Integer
-myGcd = undefined
+myGcd n m
+	| n < m = myGcd n (m-n) 
+	| n > m = myGcd (n-m) m
+	| n == m = m
 
 -- Tehtävä 14: Haskellin standardikirjasto määrittelee tyypin
 -- Ordering, jonka arvot ovat LT, GT ja EQ. Voit kokeilla miten
@@ -136,7 +139,10 @@ myGcd = undefined
 -- 2. Muuten lukujen järjestys on normaali
 
 hassuCompare :: Int -> Int -> Ordering
-hassuCompare = undefined
+hassuCompare n m
+	| mod n 2 == 1 && mod m 2 == 0 = LT
+	| mod n 2 == 0 && mod m 2 == 1 = GT
+	| True = compare n m
 
 -- Tehtävä 15: Toteuta funktio hassuMinimi :: Int -> Int -> Int, joka
 -- palauttaa hassuComparen mielestä pienimmän argumenteistaan. Käytä
