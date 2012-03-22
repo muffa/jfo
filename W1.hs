@@ -174,13 +174,14 @@ hassuMinimi n m -- = undefined
 -- * tarvitset rekursiiviisen apufunktion
 
 pyramidi :: Integer -> String
-pyramidi n = pyramidi' (n-1) True ++ show n ++ pyramidi' (n-1) False
+pyramidi 0 = ""
+pyramidi n = pyramidi' (n-1) True ++ "," ++ show n ++ "," ++ pyramidi' (n-1) False
 
 pyramidi' :: Integer -> Bool -> String
 pyramidi' n b
 	| n < 0 = ""
-	| b = pyramidi' (n-1) b ++ show n
-	| True = show n ++ pyramidi' (n-1) b
+	| b = pyramidi' (n-1) b ++ (if (n > 0) then "," else "") ++ show n
+	| True = show n ++ (if (n > 0) then "," else "") ++ pyramidi' (n-1) b
 -- Tehtävä 17: toteuta funktio smallestDivisor n, joka palauttaa
 -- pienimmän luvun k>1 s.e. n on jaollinen k:lla.
 --
@@ -202,6 +203,8 @@ smallestDivisor' n k = if mod n k == 0 then k else smallestDivisor' n (k+1)
 -- itsellään ja 1:llä. 0 ja 1 eivät ole alkulukuja.
 
 isPrime :: Integer -> Bool
+isPrime 0 = False
+isPrime 1 = False
 isPrime n = if smallestDivisor n == n then True else False -- undefined
 
 -- Tehtävä 19: toteuta funktio nextPrime, joka palauttaa annettua
