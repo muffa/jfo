@@ -73,7 +73,7 @@ power n k = n* power n (k-1)
 -- tulee 1. Käytä kokonaislukujen jakolaskua eli funktiota div
 
 ilog2 :: Integer -> Integer
-ilog2 n = if (div n 2 == 0) then 0 else 1 + ilog2 (div n 2)
+ilog2 n = if (div n 2 < 1) then 0 else 1 + ilog2 (div n 2)
 
 -- Tehtävä 11: toteuta rekursiivinen funktio binomial, joka laskee
 -- binomikertoimen. Binomikertoimen määrittelee seuraava
@@ -88,7 +88,7 @@ ilog2 n = if (div n 2 == 0) then 0 else 1 + ilog2 (div n 2)
 binomial :: Integer -> Integer -> Integer
 binomial n 0 = 1
 binomial 0 k = 0
-binomial n k = binomial (n-1) (k-1) + binomial (n-1) (k-1)
+binomial n k = binomial (n-1) (k-1) + binomial (n-1) k
 
 -- Tehtävä 12: toteuta funktio tribonacci, joka laskee n:nnen
 -- tribonaccin lukujonon luvun. Tribonaccin lukujono määritellään
