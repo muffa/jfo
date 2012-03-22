@@ -173,6 +173,8 @@ hassuMinimi n m -- = undefined
 -- * funktio show muuntaa luvun merkkijonoksi
 -- * tarvitset rekursiiviisen apufunktion
 
+--- --- YKSIKKÖTESTI ei mene läpi jostain syystä O_o Tuntuu kuitenkin toimivan.
+--- Aika huono ratkaisu tosin...
 pyramidi :: Integer -> String
 pyramidi 0 = ""
 pyramidi n = pyramidi' (n-1) True ++ "," ++ show n ++ "," ++ pyramidi' (n-1) False
