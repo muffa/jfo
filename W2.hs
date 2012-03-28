@@ -29,7 +29,7 @@ takeFinal n xs = drop (length xs - n) xs -- undefined
 -- listat"
 
 remove :: Int -> [a] -> [a]
-remove i xs = take (i-1) xs ++ drop i xs --undefined
+remove i xs = take (i) xs ++ drop (i+1) xs --undefined
 
 -- Tehtävä 5: Toteuta funktio substring i n s, joka palauttaa
 -- merkkijonon s indeksistä i alkavan n:n pituisen alimerkkijonon.
@@ -90,7 +90,7 @@ hassu strings = map toUpper( intercalate " " (filter (\x -> length x > 5) string
 quicksort :: [Int] -> [Int]
 quicksort xs --undefined
 	| null xs = xs
-	| otherwise = quicksort (filter (\x -> x < pivot) xs) ++ [pivot] ++ quicksort (filter(\x -> x > pivot) xs)
+	| otherwise = quicksort (filter (\x -> x <= pivot) (tail xs)) ++ [pivot] ++ quicksort (filter(\x -> x > pivot) xs)
 		where pivot = head xs
 
 -- Tehtävä 10: Määrittele funktio powers k max, joka palauttaa
@@ -106,7 +106,7 @@ quicksort xs --undefined
 --   * takeWhile
 
 powers :: Int -> Int -> [Int]
-powers n max = takeWhile (<max) . map (n^) $ [0..] --undefined
+powers n max = takeWhile (<=max) . map (n^) $ [0..] --undefined
 
 -- Tehtävä 11: Tee funktio search, joka ottaa argumenteikseen
 -- alkuarvon, päivitysfunktion ja lopetusehdon. Search käyttää
@@ -248,7 +248,7 @@ laskuri' commands a b output
 	| head commands == "decB" = laskuri' (tail commands) a (b-1) output
 	| head commands == "printA" = laskuri' (tail commands) a b (output ++ [show a])
 	| head commands == "printB" = laskuri' (tail commands) a b (output ++ [show b])
-
+	| otherwise = output
 -- Tehtävä 20: Tee funktio squares :: Int -> [Integer], joka palauttaa
 -- n pienintä neliötä (eli lukua joka on muotoa x*x) jotka alkavat ja
 -- päättyvät samalla numerolla.
