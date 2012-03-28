@@ -38,7 +38,7 @@ remove i xs = take (i-1) xs ++ drop i xs --undefined
 
 substring :: Int -> Int -> String -> String
 substring i n s = take n ss
-	where ss = drop (i-1) s    -- undefined
+	where ss = drop i s    -- undefined
 
 -- Tehtävä 6: Määrittele funktio mymax, joka ottaa argumenteikseen
 -- mittausfunktion tyyppiä a -> Int ja kaksi alkiota tyyppiä a.
@@ -50,7 +50,7 @@ substring i n s = take n ss
 --  mymax head   [1,2,3] [4,5]  ==>  [4,5]  
 
 mymax :: (a -> Int) -> a -> a -> a
-mymax measure a b = undefined
+mymax measure a b = if measure a < measure b then b else a --undefined
 
 -- Tehtävä 7: Määrittele funktio countSorted, joka laskee montako
 -- sille annetuista merkkijonoista on aakkosjärjestyksessä.
@@ -58,7 +58,7 @@ mymax measure a b = undefined
 -- Muista funktiot length, filter ja sort.
 
 countSorted :: [String] -> Int
-countSorted ss = undefined
+countSorted ss = length (filter (\x -> x == sort x) ss)  --undefined
 
 -- Tehtävä 8: Määrittele funktio hassu, joka ottaa syötteenään listan
 -- merkkijonoja, ja palauttaa yhden merkkijonon, joka sisältää
@@ -71,7 +71,7 @@ countSorted ss = undefined
 --  - intercalate               modulista Data.List
 
 hassu :: [String] -> String
-hassu strings = undefined
+hassu strings = map toUpper( intercalate " " (filter (\x -> length x > 5) strings))
 
 -- Tehtävä 9: Toteuta "quicksort", eli rekursiivinen
 -- lajittelualgoritmi joka toimii seuraavasti:
@@ -88,7 +88,10 @@ hassu strings = undefined
 -- tapahtuu "in-place", käyttämättä lisätilaa.
 
 quicksort :: [Int] -> [Int]
-quicksort xs = undefined
+quicksort xs --undefined
+	| null xs = xs
+	| otherwise = quicksort (filter (\x -> x < pivot) xs) ++ [pivot] ++ quicksort (filter(\x -> x > pivot) xs)
+		where pivot = head xs
 
 -- Tehtävä 10: Määrittele funktio powers k max, joka palauttaa
 -- (järjestetyn) listan kaikista k:n potensseista, jotka ovat
@@ -103,7 +106,7 @@ quicksort xs = undefined
 --   * takeWhile
 
 powers :: Int -> Int -> [Int]
-powers n max = undefined
+powers n max = takeWhile (<max) . map (n^) $ [0..] --undefined
 
 -- Tehtävä 11: Tee funktio search, joka ottaa argumenteikseen
 -- alkuarvon, päivitysfunktion ja lopetusehdon. Search käyttää
@@ -122,19 +125,20 @@ powers n max = undefined
 --     ==> Avvt
 
 search :: (a->a) -> (a->Bool) -> a -> a
-search f p x = undefined
+search f p x = if p x then x else search f p (f x)  --undefined
 
 -- Tehtävä 12: Määrittele funktio fromTo n k, joka tuottaa listan
 -- luvuista n..k. Rakenna lista itse, käyttämällä :-operaattoria.
 
 fromTo :: Int -> Int -> [Int]
-fromTo n k = undefined
+fromTo n k = if n > k then [] else 
+	if n == k then [k] else n : fromTo (n+1) k --undefined
 
 -- Tehtävä 13: Määrittele funktio sums i, joka tuottaa listan
 -- [1, 1+2, 1+2+3, .., 1+2+..+i]
 
 sums :: Int -> [Int]
-sums i = undefined
+sums i = if i == 1 then [1] else sums (i-1) ++ [sum (takeWhile (<(i+1)) [0..])]  --takeWhile (<i) [0..] --undefined
 
 -- Tehtävä 14: Määrittele rekursiota ja listojen hahmonsovitusta
 -- käyttäen funktio mylast, joka palauttaa listan viimeisen alkion tai
@@ -143,7 +147,9 @@ sums i = undefined
 --   mylast 0 [1,2,3] ==> 3
 
 mylast :: a -> [a] -> a
-mylast def xs = undefined
+mylast def [] = def
+mylast def [a] = a   --undefined
+mylast def (a:b) = mylast def b
 
 -- Tehtävä 15: Määrittele funktio sorted :: [Int] -> Bool, joka
 -- tarkastaa, onko annettu lista nousevassa suuruusjärjestyksessä.
@@ -151,7 +157,10 @@ mylast def xs = undefined
 -- listafunktioita.
 
 sorted :: [Int] -> Bool
-sorted xs = undefined
+sorted [] = True
+sorted [a] = True
+sorted (a:[b]) = if b < a then False else True
+sorted (a:(b:c)) = if a > b then False else sorted (b:c)
 
 -- Tehtävä 16: Määrittele funktio sumsOf, joka laskee annetun listan
 -- juoksevat summat näin:
@@ -161,7 +170,10 @@ sorted xs = undefined
 -- Käytä listojen hahmontunnistusta ja rekursiota, älä valmiita listafunktioita.
 
 sumsOf :: [Int] -> [Int]
-sumsOf xs = undefined
+sumsOf [] = []
+sumsOf [a] = [a]
+sumsOf (a:b) = a : map (+a) (sumsOf b)
+--sumsOf xs = undefined
 
 -- Tehtävä 17: Määrittele funktio mymaximum, joka palauttaa listan
 -- suurimman arvon. mymaximumille kuitenkin annetaan parametrina
@@ -179,7 +191,10 @@ sumsOf xs = undefined
 --     ==> 0
 
 mymaximum :: (a -> a -> Ordering) -> a -> [a] -> a
-mymaximum cmp def xs = undefined
+mymaximum cmp def [] = def
+mymaximum cmp def [a] = a
+mymaximum cmp def (a:[b]) = if (cmp a b) == LT then b else a
+mymaximum cmp def (a:b:c) = if (cmp a b) == LT then mymaximum cmp def (b:c) else mymaximum cmp def (a:c)
 
 
 -- Tehtävä 18: Määrittele funktio map2 käyttäen rekursiota. Funktio
@@ -191,7 +206,11 @@ mymaximum cmp def xs = undefined
 -- zipWith.
 
 map2 :: (a -> b -> c) -> [a] -> [b] -> [c]
-map2 f as bs = undefined
+map2 f [] b = []
+map2 f a [] = []
+map2 f (aa:ab) [b] = [f aa b]
+map2 f [a] (ba:bb) = [f a ba]
+map2 f (aa:ab) (ba:bb) = (f aa ba) : map2 f ab bb
 
 -- Tehtävä 19: Tee "komentotulkki" seuraavalla tavalla: määrittele
 -- funktio laskuri :: [String] -> [String], joka saa syötteenään
@@ -218,7 +237,17 @@ map2 f as bs = undefined
 -- oikein mutta kummallisesti :(
 
 laskuri :: [String] -> [String]
-laskuri commands = undefined
+laskuri commands = laskuri' commands 0 0 []
+
+laskuri' :: [String] -> Int -> Int -> [String] -> [String]
+laskuri' commands a b output
+	| null commands = output
+	| head commands == "incA" = laskuri' (tail commands) (a+1) b output
+	| head commands == "incB" = laskuri' (tail commands) a (b+1) output
+	| head commands == "decA" = laskuri' (tail commands) (a-1) b output
+	| head commands == "decB" = laskuri' (tail commands) a (b-1) output
+	| head commands == "printA" = laskuri' (tail commands) a b (output ++ [show a])
+	| head commands == "printB" = laskuri' (tail commands) a b (output ++ [show b])
 
 -- Tehtävä 20: Tee funktio squares :: Int -> [Integer], joka palauttaa
 -- n pienintä neliötä (eli lukua joka on muotoa x*x) jotka alkavat ja
