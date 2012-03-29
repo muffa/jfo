@@ -239,7 +239,7 @@ map2 f (aa:ab) (ba:bb) = (f aa ba) : map2 f ab bb
 laskuri :: [String] -> [String]
 laskuri commands = laskuri' commands 0 0 []
 
-laskuri' :: [String] -> Int -> Int -> [String] -> [String]
+laskuri' :: [String] -> Int -> Int -> [String] -> [String]  -- kummallinen ja huono ;<
 laskuri' commands a b output
 	| null commands = output
 	| head commands == "incA" = laskuri' (tail commands) (a+1) b output
