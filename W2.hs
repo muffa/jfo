@@ -256,4 +256,12 @@ laskuri' commands a b output
 -- Esimerkki: squares 5 ==> [1,4,9,121,484]
 
 squares :: Int -> [Integer]
-squares n = undefined
+squares n = reverse ( squares' n 1 [])
+
+squares' :: Int -> Integer -> [Integer] -> [Integer]
+squares' 0 k out = out
+squares' n k out = if (head . reverse) x == head x then squares' (n-1) (k+1) (k^2 : out) else squares' n (k+1) out
+	where x = show (k^2)
+
+
+
