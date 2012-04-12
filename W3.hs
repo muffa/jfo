@@ -61,7 +61,9 @@ lueKunnes f = do
 -- ensimmäistä fibonaccin lukua, yhden per rivi
 
 printFibs :: Int -> IO ()
-printFibs n = undefined
+printFibs 1 = putStrLn 1
+printFibs 2 = putStrLn 1
+printFibs n = putStrLn $ printFibs (n-1) + printFibs (n-2)
 
 -- Tehtävä 7: Määrittele operaatio isums n, joka lukee käyttäjältä n
 -- lukua ja palauttaa niitten summan. Lisäksi jokaisen luvun jälkeen
