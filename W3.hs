@@ -40,7 +40,10 @@ tervehdi' = do
 -- sanaa (yksi per rivi) ja palauttaa ne aakkosjärjestyksessä
 
 lueSanat :: Int -> IO [String]
-lueSanat n = undefined
+lueSanat n = do
+	s <- replicateM n getLine --readLn
+	return $ sort s
+	
 
 -- Tehtävä 5: Määrittele operaatio lueKunnes f, joka lukee käyttäjältä
 -- merkkijonoja ja palauttaa ne listana. Lukeminen lopetetaan kun f
@@ -48,7 +51,11 @@ lueSanat n = undefined
 -- True ei liitetä listaan).
 
 lueKunnes :: (String -> Bool) -> IO [String]
-lueKunnes f = undefined
+lueKunnes f = do
+  s <- getLine
+  if (f s) then return [] else do
+     ss <- lueKunnes f
+     return $ s:ss
 
 -- Tehtävä 6: Määrittele operaatio printFibs n, joka tulostaa n
 -- ensimmäistä fibonaccin lukua, yhden per rivi
