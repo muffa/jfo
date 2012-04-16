@@ -11,7 +11,8 @@ module W4 where
 --
 
 safeDiv :: Integer -> Integer -> Maybe Integer
-safeDiv x y = undefined
+safeDiv _ 0 = Nothing
+safeDiv x y = Just $ div x y
 
 -- Tehtävä 2: Tässä tehtävässä toteutetaan funktio eitherDiv, joka
 -- toimii hieman kuten safeDiv, mutta palauttaa arvon tyyppiä Either
@@ -23,7 +24,8 @@ safeDiv x y = undefined
 -- koitettiin jakaa nollalla.
 
 eitherDiv :: Integer -> Integer -> Either String Integer
-eitherDiv x y = undefined
+eitherDiv x 0 = Left $ show x ++ "/0"
+eitherDiv x y = Right $ div x y
 
 -- Tehtävä 3: Toteuta funktio mapMaybe, joka toimii hieman kuten
 -- yhdistetty map & filter.
@@ -46,7 +48,10 @@ eitherDiv x y = undefined
 --   ==> []
 
 mapMaybe :: (a -> Maybe b) -> [a] -> [b]
-mapMaybe f xs = undefined
+mapMaybe = undefined
+--mapMaybe _ [] = []
+--mapMaybe f [a] = (Just $ f a):[]
+--mapMaybe f (x:xs) = if (f x) == Nothing then mapMaybe f xs else (Just (f x)) : (mapMaybe f xs)
 
 -- Tehtävä 4: Toteuta funktio classify, joka saa listan arvoja tyyppiä
 -- Either a b ja jakaa tuottaa näistä listan tyypin a arvoja ja listan
@@ -62,7 +67,11 @@ mapMaybe f xs = undefined
 --     ==> ([1,0],[True,False])
 
 classify :: [Either a b] -> ([a],[b])
-classify es = undefined
+classify [] = ([],[])
+classify [x] = case x of Left x -> ([x],[])
+                         Right x -> ([],[x])
+classify (e:es) = case e of Left e -> ([e] ++ (fst $ classify es), [] ++ (snd $ classify es))
+                            Right e -> ([]++  (fst $ classify es),[e] ++ (snd $ classify es))
 
 
 -- Tehtävät 5&6: Määrittele tietotyyppi Person, joka sisältää yhden
