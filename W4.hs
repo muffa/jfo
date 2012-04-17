@@ -48,10 +48,12 @@ eitherDiv x y = Right $ div x y
 --   ==> []
 
 
-mapMaybe :: (a -> Maybe b) -> [a] -> [b]  -- herp derp en osaa
-mapMaybe = undefined
---mapMaybe _ [] = []
---mapMaybe f [a] = (Just $ f a):[]
+mapMaybe :: (a -> Maybe b) -> [a] -> [b]  
+--mapMaybe = undefined
+mapMaybe _ [] = []
+mapMaybe f (x:xs) = case f x of Nothing -> mapMaybe f xs
+                                Just x' -> x':(mapMaybe f xs)
+
 --mapMaybe f (x:xs) = if (f x) == Nothing then mapMaybe f xs else (Just (f x)) : (mapMaybe f xs)
 
 -- Tehtävä 4: Toteuta funktio classify, joka saa listan arvoja tyyppiä
@@ -233,7 +235,9 @@ leftest (Node a l _) = case l of (Node _ _ _) -> leftest l
 --   ==> (Node 2 (Node 3 Leaf Leaf) (Node 4 Leaf Leaf))
 
 mapTree :: (a -> b) -> Tree a -> Tree b
-mapTree f t = undefined
+mapTree f Leaf = Leaf
+mapTree f (Node a l r) = Node (f a) (mapTree f l) (mapTree f r)
+
 
 -- Tehtävä 15: Toteuta funktio insertL, joka lisää annetun arvon puuhun
 -- mahdollisimman vasemmalle.
@@ -260,7 +264,9 @@ mapTree f t = undefined
 
 
 insertL :: a -> Tree a -> Tree a
-insertL x t = undefined
+insertL x Leaf = Node x Leaf Leaf
+insertL x (Node a l r) = case l of Leaf -> Node a (Node x Leaf Leaf) r
+                                   (Node _ _ _) -> Node a (insertL x l) r
 
 -- Tehtävä 16: Toteuta funktio measure, joka muuntaa annetun puun
 -- sellaiseksi, että jokaisessa solmussa on ko. solmusta alkavan
@@ -271,7 +277,8 @@ insertL x t = undefined
 -- TODO siisti mallivastaus?
 
 measure :: Tree a -> Tree Int
-measure t = undefined
+measure Leaf = Leaf
+measure (Node a l r) = Node (treeSize (Node a l r)) (measure l) (measure r)
 
 -- Tehtävä 17: Standardikirjaston funktio
 --   foldr :: (a -> b -> b) -> b -> [a] -> b
@@ -288,13 +295,13 @@ mysum :: [Int] -> Int
 mysum is = foldr sumf 0 is
 
 sumf :: Int -> Int -> Int
-sumf x y = undefined
+sumf x y = x+y
 
 mylength :: [a] -> Int
 mylength xs = foldr lengthf 0 xs
 
 lengthf :: a -> Int -> Int
-lengthf x y = undefined
+lengthf x y = y+1 
 
 -- Tehtävä 18: Toteuta funktio foldTree, joka on foldin tapainen
 -- operaatio puille (eli yllä kuvaillulle Tree-luokalle).
@@ -350,4 +357,12 @@ data Color = Red | Green | Blue | Mix Color Color | Darken Double Color
   deriving Show
 
 rgb :: Color -> [Double]
-rgb col = undefined
+rgb Red = [1,0,0]
+rgb Green = [0,1,0]
+rgb Blue  = [0,0,1]
+
+rgb (Mix c c') = min 1 (rgb c !! 0 + rgb c' !! 0) : min 1 (rgb c !! 1 + rgb c' !! 1) : [min 1 (rgb c !! 2 + rgb c' !! 2)]
+rgb (Darken i c) = (1-i) * (rgb c !! 0) : (1-i) * (rgb c !! 1 ) : [(1-i) * (rgb c !! 2)]
+
+
+
