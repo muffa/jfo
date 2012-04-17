@@ -47,7 +47,8 @@ eitherDiv x y = Right $ div x y
 -- mapMaybe (\x -> Nothing) [1,2,3]
 --   ==> []
 
-mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+
+mapMaybe :: (a -> Maybe b) -> [a] -> [b]  -- herp derp en osaa
 mapMaybe = undefined
 --mapMaybe _ [] = []
 --mapMaybe f [a] = (Just $ f a):[]
@@ -80,29 +81,29 @@ classify (e:es) = case e of Left e -> ([e] ++ (fst $ classify es), [] ++ (snd $ 
 -- Määrittele myös Person-arvo matti ja Person-tyypin käsittelemiseen
 -- operaatiot getAge, getName, setAge ja setName. (Ks. alla)
 
-data Person = PersonUndefined
+data Person = Person Int String
   deriving Show
 
 -- matti on henkilö jonka nimi on "Matti" ja ikä 90
 matti :: Person
-matti = undefined
+matti = Person 90 "Matti"
 
 -- getName palauttaa henkilön nimen
 getName :: Person -> String
-getName p = undefined
+getName (Person _ s) = s
 
 -- getAge palauttaa henkilön iän
 getAge :: Person -> Int
-getAge p = undefined
+getAge (Person i _) = i
 
 -- setName asettaa henkilön nimen
 -- HUOM! setName palauttaa uuden henkilön sillä Haskellissa mikään ei muutu
 setName :: String -> Person -> Person
-setName name p = undefined
+setName name (Person i _) = Person i name
 
 -- setAge asettaa henkilön iän
 setAge :: Int -> Person -> Person
-setAge age p = undefined
+setAge age (Person _ s) = Person age s
   
 
 -- Tehtävä 7&8: Määrittele tietotyyppi TwoCounters joka esittää kahta
@@ -116,27 +117,27 @@ setAge age p = undefined
 -- getB (incB (incA zeros))
 --   ==> 1
 
-data TwoCounters = Undefined
+data TwoCounters = TwoCounters Int Int
 
 -- zeros on TwoCounters-arvo, jossa kummatkin laskurit ovat 0
 zeros :: TwoCounters
-zeros = undefined
+zeros = TwoCounters 0 0
 
 -- getA palauttaa A-laskurin arvon
 getA :: TwoCounters -> Int
-getA tc = undefined
+getA (TwoCounters a _) = a
 
 -- getB palauttaa B-laskurin arvon
 getB :: TwoCounters -> Int
-getB tc = undefined
+getB (TwoCounters _ b) = b
 
 -- incA kasvattaa A-laskurin arvoa yhdellä
 incA :: TwoCounters -> TwoCounters
-incA tc = undefined
+incA (TwoCounters a b) = TwoCounters (a+1) b
 
 -- incB kasvattaa B-laskurin arvoa yhdellä
 incB :: TwoCounters -> TwoCounters
-incB tc = undefined
+incB (TwoCounters a b) = TwoCounters a (b+1)
 
 -- Tehtävä 9&10: Määrittele tietotyyppi UpDown joka esittää laskuria,
 -- joka voi olla joko nousevassa tai laskevassa tilassa. Toteuta myös
@@ -154,25 +155,28 @@ incB tc = undefined
 -- get (tick (tick (toggle (tick zero))))
 --   ==> -1
 
-data UpDown = UpDownUndefined1 | UpDownUndefined2
+data UpDown = Up Int | Down Int
 
 -- zero on nouseva laskuri jonka arvo on 0
 zero :: UpDown
-zero = undefined
+zero = Up 0
 
 -- get palauttaa laskurin arvon
 get :: UpDown -> Int
-get ud = undefined
+get (Up i) = i
+get (Down i) = i
 
 -- tick kasvattaa nousevaa laskuria yhdellä ja pienentää laskevaa
 -- laskuria yhdellä
 tick :: UpDown -> UpDown
-tick ud = undefined
+tick (Up i) = Up (i+1)
+tick (Down i) = Down (i-1)
 
 -- toggle muuttaa nousevan laskurin laskevaksi ja päinvastoin.
 -- Laskurin arvo ei muutu.
 toggle :: UpDown -> UpDown
-toggle ud = undefined
+toggle (Up i) = Down i
+toggle (Down i) = Up i
 
 -- !!!!!
 -- Muutama seuraava tehtävä käsittelevät luennoilla esiteltyä
@@ -186,13 +190,15 @@ data Tree a = Leaf | Node a (Tree a) (Tree a)
 -- koska puu saattaa olla tyhjä (eli Leaf).
 
 valAtRoot :: Tree a -> Maybe a
-valAtRoot t = undefined
+valAtRoot (Node a _ _) = Just a
+valAtRoot Leaf = Nothing
 
 -- Tehtävä 12: Toteuta funktio treeSize, joka laskee puun solmujen (eli
 -- Node-konstruktorien) lukumäärän.
 
 treeSize :: Tree a -> Int
-treeSize t = undefined
+treeSize Leaf = 0
+treeSize (Node _ r l) = 1 + treeSize r + treeSize l
 
 -- Tehtävä 13: Toteuta funktio leftest, joka palauttaa puun
 -- vasemmanpuolimmaisen arvon. Palautustyyppi on Maybe a koska
@@ -208,9 +214,14 @@ treeSize t = undefined
 --   ==> Just 3
 -- leftest (Node 1 (Node 2 Leaf (Node 3 Leaf Leaf)) (Node 4 Leaf Leaf))
 --   ==> Just 2
+--
+--- ilmeisesti siis Node _ left right eikä toisinpäin
+
 
 leftest :: Tree a -> Maybe a
-leftest t = undefined
+leftest Leaf = Nothing
+leftest (Node a l _) = case l of (Node _ _ _) -> leftest l
+                                 Leaf -> Just a  
 
 -- Tehtävä 14: Toteuta funktio mapTree, joka toimii kuten map, mutta
 -- puille.
