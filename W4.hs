@@ -49,7 +49,6 @@ eitherDiv x y = Right $ div x y
 
 
 mapMaybe :: (a -> Maybe b) -> [a] -> [b]  
---mapMaybe = undefined
 mapMaybe _ [] = []
 mapMaybe f (x:xs) = case f x of Nothing -> mapMaybe f xs
                                 Just x' -> x':(mapMaybe f xs)
@@ -324,7 +323,8 @@ treeLeaves :: Tree a -> Int
 treeLeaves t = foldTree leaft 1 t
 
 foldTree :: (a -> b -> b -> b) -> b -> Tree a -> b
-foldTree f x t = undefined
+foldTree f x Leaf = x
+foldTree f x (Node val l r) = f val (foldTree f x l) (foldTree f x r)
 
 -- Tehtävä 19: Alla näet hieman laajennetun version luentojen
 -- värityypistä Color.
