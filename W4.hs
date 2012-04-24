@@ -362,7 +362,9 @@ rgb Green = [0,1,0]
 rgb Blue  = [0,0,1]
 
 rgb (Mix c c') = min 1 (rgb c !! 0 + rgb c' !! 0) : min 1 (rgb c !! 1 + rgb c' !! 1) : [min 1 (rgb c !! 2 + rgb c' !! 2)]
-rgb (Darken i c) = (1-i) * (rgb c !! 0) : (1-i) * (rgb c !! 1 ) : [(1-i) * (rgb c !! 2)]
+rgb (Darken i c) = map ((1-i)*) (rgb c)
+
+--rgb (Darken i c) = (1-i) * (rgb c !! 0) : (1-i) * (rgb c !! 1 ) : [(1-i) * (rgb c !! 2)]
 
 
 
