@@ -277,7 +277,9 @@ boolLength (x:xs) = if (x || head xs || True) then 1 + boolLength xs else error
 --  (True,True,False)
 
 threeRandom :: (Random a, RandomGen g) => g -> (a,a,a)
-threeRandom g = undefined
+threeRandom g = (fst $ random g, fst $ random g1, fst $ random g2)
+  where (g1,g2) = split g
+ 
 
 -- Tehtävä 20: Toteuta funktio randomizeTree joka ottaa puun ja
 -- palauttaa samanmuotoisen puun jossa jokaisessa Nodessa on
@@ -300,4 +302,18 @@ data Tree a = Leaf | Node a (Tree a) (Tree a)
   deriving Show
 
 randomizeTree :: (Random a, RandomGen g) => Tree b -> g -> (Tree a,g)
-randomizeTree t g = undefined
+randomizeTree Leaf g = (Leaf,g)
+randomizeTree (Node i t t') g = ((Node (fst $ random g) (fst (randomizeTree t g1)) (fst (randomizeTree t' g2))), g)
+  where (g1,g2) = split g
+
+
+
+
+
+
+
+
+
+
+
+
