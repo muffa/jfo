@@ -151,11 +151,6 @@ freqs :: Eq a => [a] -> [(Int,a)]
 freqs [] = []
 freqs (x:xs) = (1+length (filter (== x) xs),x) : freqs (filter (/= x) xs)
 
---freqs xs = freqs' (quicksort xs)
---count 
-
-
-
 -- Tehtävä 10: Määrittele allaolevalle kokonaislukuja sisältävän
 -- binääripuun tyypille Eq-instanssi.
 --
