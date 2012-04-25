@@ -179,7 +179,9 @@ data List a = Empty | LNode a (List a)
   deriving Show
 
 instance Eq a => Eq (List a) where
-  (==) = error "toteuta minut"
+  Empty == Empty = True 
+  LNode a1 b1 == LNode a2 b2 = (a1 == a2) && (b1 == b2)
+  _ == _ = False
 
 -- Tehtävä 12: Määrittele funktio incrementAll, joka lisää kaikkia
 -- funktorin sisällä olevia arvoja yhdellä.
@@ -189,7 +191,7 @@ instance Eq a => Eq (List a) where
 --   incrementAll (Just 3.0)  ==>  Just 4.0
 
 incrementAll :: (Functor f, Num n) => f n -> f n
-incrementAll x = undefined
+incrementAll x = fmap (+1) x 
 
 -- Tehtävä 13: Alla on määritelty tyyppi Result, joka toimii hieman
 -- kuten Maybe, mutta virhetiloja on kaksi erilaista: toinen sisältää
@@ -199,11 +201,15 @@ data Result a = MkResult a | NoResult | Failure String
   deriving (Show,Eq)
 
 instance Functor Result where
+  fmap _ NoResult = NoResult
+  fmap _ (Failure s) = (Failure s)
+  fmap f (MkResult a) = MkResult (f a)
 
 -- Tehtävä 14: Määrittele instanssi Functor List.
 
 instance Functor List where
-
+  fmap _ Empty = Empty
+  fmap f (LNode x xs) = LNode (f x) (fmap f xs)
 -- Tehtävä 15: Tässä tyyppi Fun a, joka on yksinkertainen kääre
 -- funktiolle tyyppiä Int -> a. Tehtävänäsi on kirjoittaa instanssi
 -- Functor Fun.
@@ -217,7 +223,7 @@ runFun :: Fun a -> Int -> a
 runFun (Fun f) x = f x
 
 instance Functor Fun where
-
+  fmap f (Fun f') = Fun (f . f')
 -- Tehtävä 16: Määrittele operaattori ||| joka toimii kuten ||, mutta
 -- pakottaa _oikeanpuoleisen_ argumenttinsa.
 -- 
@@ -227,7 +233,7 @@ instance Functor Fun where
 --   undefined ||| True  ==> True
 
 (|||) :: Bool -> Bool -> Bool
-x ||| y = undefined
+x ||| y = y || x
 
 -- Tehtävä 17: Määrittele funktio boolLength joka palauttaa
 -- Bool-listan pituuden ja pakottaa kaikki listan alkiot.
@@ -238,7 +244,9 @@ x ||| y = undefined
 -- Huom! length [False,undefined] ==> 2
 
 boolLength :: [Bool] -> Int
-boolLength xs = undefined
+boolLength [a] = if (a || True) then 1 else error "Virhe"
+boolLength [] = 0
+boolLength (x:xs) = if (x || head xs || True) then 1 + boolLength xs else error "Virhe"
 
 -- Tehtävä 18: Tämä ja seuraava tehtävä ovat pohjustusta ensi viikon
 -- materiaaliin.
@@ -271,7 +279,7 @@ boolLength xs = undefined
 threeRandom :: (Random a, RandomGen g) => g -> (a,a,a)
 threeRandom g = undefined
 
--- Tehtävä 19: Toteuta funktio randomizeTree joka ottaa puun ja
+-- Tehtävä 20: Toteuta funktio randomizeTree joka ottaa puun ja
 -- palauttaa samanmuotoisen puun jossa jokaisessa Nodessa on
 -- satunnainen arvo. Tuota arvot jälleen funktiolla random.
 --
