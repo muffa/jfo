@@ -135,6 +135,8 @@ prop_t6 = printTestCase ("Bar <= Bar") ((Bar <= Bar) === True)
           .&. printTestCase ("Xyzzy > Quux") ((Xyzzy > Quux) === True)
           .&. printTestCase ("min Xyzzy Bar") (min Xyzzy Bar === Bar)
           .&. printTestCase ("max Bar Quux") (max Bar Quux === Bar)
+          .&. printTestCase ("compare Xyzzy Xyzzy") (compare Xyzzy Xyzzy == EQ)
+          .&. printTestCase ("compare Bar Bar") (compare Bar Bar == EQ)
           
 prop_t7_eq a b c =
   let v = Vector a b c in
