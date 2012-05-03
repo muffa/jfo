@@ -28,7 +28,8 @@ lueNimet s =
   ?>
   tarkastaIsotAlkukirjaimet
 
-pilko s = undefined
+pilko s = if null xs then Nothing else Just (x,unwords xs) where
+  (x:xs) = words s
 tarkastaNumero x = undefined
 tarkastaIsotAlkukirjaimet x = undefined
 
