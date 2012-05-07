@@ -141,21 +141,25 @@ addPoints x s = MkStudent (getName s) (getNumber s) pojot where
 -- PS! Muista jättää deriving Show -rivi paikalleen että testit voivat
 -- tulostaa asioita.
 
-data Tree23 = Undefined
+data Tree23 = Leaf | Node2 Tree23 Tree23 | Node3 Tree23 Tree23 Tree23
   deriving Show
 
 leaf :: Tree23
-leaf = undefined
+leaf = Leaf
 node2 :: Tree23 -> Tree23 -> Tree23
-node2 = undefined
+node2 t1 t2 = Node2 t1 t2
 node3 :: Tree23 -> Tree23 -> Tree23 -> Tree23
-node3 = undefined
+node3 t1 t2 t3 = Node3 t1 t2 t3
 
 treeHeight :: Tree23 -> Int
-treeHeight t = undefined
+treeHeight Leaf = 0
+treeHeight (Node2 t1 t2) = 1 + max (treeHeight t1) (treeHeight t2)
+treeHeight (Node3 t1 t2 t3) = 1 + (max (max (treeHeight t1) (treeHeight t2)) (treeHeight t3))
 
 treeSize :: Tree23 -> Int
-treeSize t = undefined
+treeSize Leaf = 0
+treeSize (Node2 t1 t2) = 1 + treeSize t1 + treeSize t2
+treeSize (Node3 t1 t2 t3) = 1 + treeSize t1 + treeSize t2 + treeSize t3
 
 -- Tehtävä 7: Määrittele tyyppi MyString, ja sille Eq ja Ord
 -- -instanssit.
@@ -179,18 +183,24 @@ treeSize t = undefined
 -- compare (fromString "abc") (fromString "ab")  ==> GT
 -- compare (fromString "abc") (fromString "abd") ==> LT
 
-data MyString = MyStringUndefined
+data MyString = MyString String
 
 fromString :: String -> MyString
-fromString s = undefined
+fromString s = MyString s
 toString :: MyString -> String
-toString ms = undefined
+toString (MyString s) = s
 
 instance Eq MyString where
-  (==) = error "toteuta minut"
+  (==) (MyString s) (MyString s') = s == s'
   
 instance Ord MyString where
-  compare = error "toteuta minut"
+  compare (MyString s) (MyString s')
+    | length s < length s' = LT
+    | length s > length s' = GT
+    | s == s' = EQ
+    | otherwise = if (compare a b == EQ) then compare ss ss' else compare a b where
+      (a:ss) = s
+      (b:ss') = s'
 
 -- Tehtävä 8: Alla tyyppi Expr, joka kuvaa yhteen- ja jakolaskuista
 -- koostuvia laskutoimituksia. Esimerkiksi (1+2)/3+4 olisi
@@ -254,7 +264,10 @@ test2 k x = do modify (k:)
                return (x>k)
 
 test :: Monad m => [a -> m Bool] -> a -> m Bool
-test ts x = undefined
+test t x = undefined
+--test (t:ts) x = case t x of
+--  Nothing -> Nothing
+--  _ -> if t x then Just test (head ts) x else Just False
 
 -- Tehtävä 10: Toteuta State-monadissa operaatio odds, joka tuottaa
 -- tilan, jossa ovat kaikki ne alkiot jotka esiintyvät alkuperäisessä
