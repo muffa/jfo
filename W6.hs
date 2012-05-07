@@ -30,8 +30,8 @@ lueNimet s =
 
 pilko s = if null xs then Nothing else Just (x,unwords xs) where
   (x:xs) = words s
-tarkastaNumero x = undefined
-tarkastaIsotAlkukirjaimet x = undefined
+tarkastaNumero (foo,bar) = if null (filter isNumber (foo ++ bar)) then Just (foo,bar) else Nothing
+tarkastaIsotAlkukirjaimet ((f:foo),(b:bar)) = if not (isUpper f && isUpper b) then Nothing else Just ((f:foo),(b:bar))
 
 -- Tehtävä 2: Toteuta ?>-operaattorin avulla funktio chainList, joka
 -- muttaa listan Maybe-arvoja listaksi ketjuttamalla ne kaikki yhteen.
@@ -45,7 +45,9 @@ tarkastaIsotAlkukirjaimet x = undefined
 --    ==> Nothing
 
 chainList :: [Maybe a] -> Maybe [a]
-chainList ms = undefined
+--chainList [] = Just []
+--chainList (m:ms) = Just (m ?> (m:chainList ms))
+--chainList (m:ms) = Just map (m ?>) chainList ms
 
 -- Tehtävä 3: Toteuta chainListin ja ?>:n avulla funktio sumPos, joka
 -- laskee listan summan, mutta epäonnistuu (eli palauttaa Nothing) jos
