@@ -22,7 +22,16 @@ import Control.Monad.State
 -- PS. pyramidin ulkonäköä on helppo kokeilla ghci:ssä näin: putStr (pyramidi 5)
 
 pyramidi :: Int -> String
-pyramidi n = undefined
+pyramidi n = pyr n n
+
+pyr :: Int -> Int -> String
+pyr 1 k = givechar ' ' (k-1) ++ "*\n"
+pyr n k = pyr (n-1) k ++ givechar ' ' (k-n) ++ givechar '*' (2*n-1) ++ "\n"
+
+givechar :: Char -> Int -> String
+givechar c 0 = []
+givechar c 1 = [c]
+givechar c n = [c] ++ givechar c (n-1) 
 
 -- Tehtävä 2: Toteuta funktio jokaToinen, joka ottaa listan ja
 -- palauttaa kaikki listan ensimmäisen, kolmannen, viidennen, jne.
@@ -40,7 +49,9 @@ pyramidi n = undefined
 --    ==> []
 
 jokaToinen :: [a] -> [a]
-jokaToinen xs = undefined
+jokaToinen [] = []
+jokaToinen [x] = [x]
+jokaToinen (x:y:xs) = x:(jokaToinen xs)
 
 -- Tehtävä 3: Toteuta funktio wrap, joka ottaa listan ja palauttaa
 -- parin (get,query). get ja query ovat funktioita siten, että
@@ -52,7 +63,7 @@ jokaToinen xs = undefined
 --    ==> (5,True,7,False)
 
 wrap :: Eq a => [a] -> (Int -> a, a -> Bool)
-wrap xs = undefined
+wrap xs = ((\x -> xs !! x), (\x -> not $ null (filter (==x) xs))) 
 
 -- Tehtävä 4: Toteuta funktio nousevat, joka pilkkoo lukulistan
 -- (aidosti) nouseviin pätkiin.
@@ -66,7 +77,12 @@ wrap xs = undefined
 --    ==> [[4,7,9],[3,6],[1,2],[2,5,8],[0]]
 
 nousevat :: [Int] -> [[Int]]
+nousevat [] = [[]]
+nousevat [x] = [[x]]
 nousevat xs = undefined
+
+--nousuapu :: [Int] -> Int -> ([Int],[Int])
+--nousuapu (x:xs) y = if (x>y) then (x:(nousuapu xs x)) else 
 
 -- Tehtävä 5: Määrittele kurssilaista esittävä tietotyyppi
 -- Student, jolla on kolme kenttää: nimi (String),
@@ -91,22 +107,23 @@ nousevat xs = undefined
 --  getPoints $ addPoints (-1000) $ newStudent "x" "0"
 --    ==> 0
 
-data Student = StudentUndefined
+data Student = MkStudent String String Int
 
 newStudent :: String -> String -> Student
-newStudent nam num = undefined
+newStudent nam num = MkStudent nam num 0 
 
 getName :: Student -> String
-getName s = undefined
+getName (MkStudent nam _ _) = nam
 
 getNumber :: Student -> String
-getNumber s = undefined
+getNumber (MkStudent _ num _) = num
 
 getPoints :: Student -> Int
-getPoints s = undefined
+getPoints (MkStudent _ _ pts) = pts
 
 addPoints :: Int -> Student -> Student
-addPoints x s = undefined
+addPoints x s = MkStudent (getName s) (getNumber s) pojot where
+  pojot = if (x<0) then getPoints s else (x+ getPoints s)
 
 -- Tehtävä 6: Määrittele tyyppi Tree23, joka esittää puuta jossa
 -- jokaisella sisäsolmulla (eli ei-lehti-solmulla) on joko 2 tai 3
