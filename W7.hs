@@ -79,10 +79,16 @@ wrap xs = ((\x -> xs !! x), (\x -> not $ null (filter (==x) xs)))
 nousevat :: [Int] -> [[Int]]
 nousevat [] = [[]]
 nousevat [x] = [[x]]
-nousevat xs = undefined
+nousevat xs = filter (/=[]) (doit ([],xs) [])
 
---nousuapu :: [Int] -> Int -> ([Int],[Int])
---nousuapu (x:xs) y = if (x>y) then (x:(nousuapu xs x)) else 
+nousuapu :: [Int] -> [Int] -> Int -> ([Int],[Int])
+nousuapu kasattu [] _ = (kasattu,[])
+nousuapu kasattu (x:xs) y = if (x>y) then nousuapu (kasattu ++ [x]) xs x else (kasattu,(x:xs))
+
+doit :: ([Int],[Int]) -> [[Int]] -> [[Int]]
+doit (kasattu,[]) valmiit = valmiit ++ [kasattu]
+doit (kasattu,[a]) valmiit = valmiit ++ [kasattu] ++ [[a]]
+doit (kasattu,xs) valmiit = (valmiit ++ [kasattu]) ++ (doit (nousuapu [] xs (head xs - 1)) [])
 
 -- Tehtävä 5: Määrittele kurssilaista esittävä tietotyyppi
 -- Student, jolla on kolme kenttää: nimi (String),
@@ -225,7 +231,18 @@ instance Ord MyString where
 data Expr = Constant Int | Plus Expr Expr | Div Expr Expr
 
 safeEval :: Expr -> Maybe Int
-safeEval e = undefined
+safeEval (Constant a) = Just a
+safeEval (Plus e1 e2) = (safeEval e1 +++ safeEval e2)
+safeEval (Div e1 e2) = (jako (safeEval e1) (safeEval e2))
+
+(+++) :: Maybe Int -> Maybe Int -> Maybe Int
+(Just b) +++ (Just b') = Just (b + b')
+_ +++ _  = Nothing
+
+jako :: Maybe Int -> Maybe Int -> Maybe Int
+jako (Just x) (Just 0) = Nothing
+jako (Just x) (Just y) = Just (div x y)
+jako _ _ = Nothing
 
 -- Tehtävä 9: Toteuta operaatio test, joka saa listan monadisia
 -- testejä ja arvon. test palauttaa True jos kaikki testit palauttavat
@@ -266,9 +283,10 @@ test2 k x = do modify (k:)
 test :: Monad m => [a -> m Bool] -> a -> m Bool
 test t x = undefined
 --test (t:ts) x = case t x of
---  Nothing -> Nothing
+ -- Nothing -> Nothing
 --  _ -> if t x then Just test (head ts) x else Just False
-
+--  Just True -> Just test (head ts) x
+ -- Just False -> Just False
 -- Tehtävä 10: Toteuta State-monadissa operaatio odds, joka tuottaa
 -- tilan, jossa ovat kaikki ne alkiot jotka esiintyvät alkuperäisessä
 -- listassa _parittoman_määrän_ kertoja.
